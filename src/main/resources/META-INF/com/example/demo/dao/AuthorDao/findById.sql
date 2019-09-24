@@ -1,0 +1,1 @@
+select * from author where id = /*id*/1

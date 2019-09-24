@@ -1,0 +1,74 @@
+plugins {
+  id 'java'
+  id 'org.springframework.boot' version '2.1.8.RELEASE'
+  id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+  id 'idea'
+}
+
+def generatedSources = "$projectDir/generated"
+def generatedOutputDir = file("$generatedSources")
+
+sourceSets {
+  main { java { srcDirs += generatedOutputDir } }
+//  test {
+//    groovy { srcDirs = ['src/test/groovy']}
+//  }
+}
+
+clean { doFirst { delete generatedOutputDir } }
+
+compileJava {
+	dependsOn clean
+
+	options.encoding = 'UTF-8'
+	doFirst {
+		generatedOutputDir.exists() || generatedOutputDir.mkdirs()
+		options.compilerArgs = [
+			'-s',
+			"${generatedSources}"
+		]
+	}
+}
+
+idea {
+  module {
+    // モジュールの出力先ディレクトリをcompileJava.destinationDirに変更
+    outputDir compileJava.destinationDir
+    inheritOutputDirs true
+    sourceDirs += file('generated')
+    generatedSourceDirs += file('generated')
+    testSourceDirs += file('generated_tests')
+    generatedSourceDirs += file('generated_tests')
+  }
+}
+
+processResources.destinationDir = compileJava.destinationDir
+compileJava.dependsOn processResources
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+def domaVersion = '2.19.2'
+def lombokVersion = '1.18.6'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  annotationProcessor group: 'org.seasar.doma', name: 'doma', version: domaVersion
+  annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+  compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+
+  implementation group: 'org.seasar.doma', name: 'doma', version: domaVersion
+  implementation 'com.h2database:h2:1.4.199'
+
+  implementation 'com.graphql-java:graphql-java:11.0'
+  implementation 'com.google.guava:guava:26.0-jre'
+
+  implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter'
+  implementation 'com.graphql-java:graphql-java-spring-boot-starter-webmvc:1.0'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

@@ -1,0 +1,23 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+.classpath
+.project
+
+# Ignore Gradle build output directory
+build
+classes
+generated
+generated_tests
+.DS_Store
+bin
+.idea/misc.xml
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/gradle.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.settings/org.eclipse.buildship.core.prefs
+demo.iws
+demo.iml
+demo.ipr
